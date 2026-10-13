@@ -2,7 +2,7 @@
 
 ## Visão geral
 
-O **Doc Architect** é uma **SPA (Single Page Application)** estática projetada para rodar diretamente no navegador e ser hospedada no **GitHub Pages**. A aplicação implementa um assistente passo a passo (wizard) que orquestra as 4 fases do fluxo spec-driven (Kiro) comunicando-se diretamente com provedores de IA gratuitos (**Groq** e **OpenRouter**).
+O **Doc Architect** é uma **SPA (Single Page Application)** estática projetada para rodar diretamente no navegador e ser hospedada no **GitHub Pages**. A aplicação implementa um assistente passo a passo (wizard) que orquestra as 4 fases do fluxo spec-driven comunicando-se diretamente com provedores de IA gratuitos (**Groq** e **OpenRouter**).
 
 ---
 

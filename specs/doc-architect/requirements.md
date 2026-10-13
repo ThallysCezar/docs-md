@@ -1,11 +1,11 @@
 # Requirements — Doc Architect (Web & Spec-Driven)
 
-> Formato Kiro: histórias de usuário + critérios de aceite em **EARS**
+> Formato Spec-Driven: histórias de usuário + critérios de aceite em **EARS**
 > (`WHEN <gatilho> THE <sistema> SHALL <resposta>` / `IF <condição> THEN …` / `WHILE <estado> …`).
 
 ## Introdução
 
-O **Doc Architect** é uma aplicação web SPA (Single Page Application) estática, executável diretamente via **GitHub Pages**, que orienta desenvolvedores a gerarem a documentação completa no padrão **spec-driven do Kiro** (`Context.md`, `Spec.md`, `Plan.md`, `AGENTS.md` e `CLAUDE.md`). A aplicação utiliza modelos de IA gratuitos ou de baixo custo através das APIs do **Groq** e **OpenRouter**, mantendo as chaves privadas do usuário no navegador e oferecendo aprovação por fases e visualização em tempo real de diagramas Mermaid.
+O **Doc Architect** é uma aplicação web SPA (Single Page Application) estática, executável diretamente via **GitHub Pages**, que orienta desenvolvedores a gerarem a documentação completa no padrão **spec-driven** (`Context.md`, `Spec.md`, `Plan.md`, `AGENTS.md` e `CLAUDE.md`). A aplicação utiliza modelos de IA gratuitos ou de baixo custo através das APIs do **Groq** e **OpenRouter**, mantendo as chaves privadas do usuário no navegador e oferecendo aprovação por fases e visualização em tempo real de diagramas Mermaid.
 
 ---
 

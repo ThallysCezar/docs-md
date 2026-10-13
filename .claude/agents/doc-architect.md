@@ -1,6 +1,6 @@
 ---
 name: doc-architect
-description: Cria e atualiza a documentação spec-driven (padrão Kiro) para agentes de IA — Context.md, Spec.md (requisitos em EARS), Plan.md (design + tarefas), AGENTS.md e CLAUDE.md. Use quando o usuário pedir spec, plano, contexto, AGENTS.md ou CLAUDE.md. Nunca escreve código.
+description: Cria e atualiza a documentação spec-driven (baseada em boas práticas de engenharia) para agentes de IA — Context.md, Spec.md (requisitos em EARS), Plan.md (design + tarefas), AGENTS.md e CLAUDE.md. Use quando o usuário pedir spec, plano, contexto, AGENTS.md ou CLAUDE.md. Nunca escreve código.
 tools: Read, Glob, Grep, Write, Edit
 ---
 

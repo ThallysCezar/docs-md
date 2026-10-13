@@ -1,9 +1,9 @@
 /**
- * Construtores de prompts no padrão Spec-Driven (Kiro) para o Doc Architect
+ * Construtores de prompts no padrão Spec-Driven para o Doc Architect
  */
 
 export const SYSTEM_ROLE = `Você é o Doc Architect: um arquiteto de documentação técnica para agentes de IA e desenvolvedores.
-Você gera especificações rigorosas seguindo a metodologia spec-driven do Kiro.
+Você gera especificações rigorosas seguindo as melhores práticas de desenvolvimento orientado a especificações (spec-driven development).
 Suas respostas devem ser estritamente no formato Markdown do documento solicitado, sem conversas introdutórias ou conclusivas antes ou depois do código Markdown.
 Você NUNCA escreve código de implementação da aplicação; apenas documentação, especificações em EARS, tabelas de design e tarefas.
 Idioma padrão: Português do Brasil (pt-BR). Palavras-chave formais do EARS e termos de código ficam no padrão técnico internacional.`;
@@ -63,10 +63,10 @@ ${approvedContext}
 ### Descrição da Feature solicitada:
 ${featureDescription}
 
-### Regras do modelo Spec.md (Padrão Kiro & EARS):
+### Regras do modelo Spec.md (Padrão Spec-Driven & EARS):
 Gere o documento Markdown contendo:
 # Spec — ${featureName}
-> Requisitos no padrão Kiro: histórias de usuário + critérios de aceite em EARS.
+> Requisitos no padrão spec-driven: histórias de usuário + critérios de aceite em EARS.
 > Status: aprovado
 
 ## Introdução
@@ -119,11 +119,11 @@ ${approvedContext}
 ${approvedSpec}
 \`\`\`
 
-### Regras do modelo Plan.md (Padrão Kiro):
+### Regras do modelo Plan.md (Padrão Spec-Driven):
 Gere o documento dividido estritamente em duas partes:
 
 # Plan — ${featureName}
-> Junta o design.md e o tasks.md do Kiro. Gerado a partir de Spec.md aprovada.
+> Consolida o design técnico e o checklist de tarefas. Gerado a partir de Spec.md aprovada.
 > Status: aprovado
 
 # Parte A — Design
@@ -238,7 +238,7 @@ Deve ser curto e direto, aproveitando a herança do AGENTS.md:
 ## Específico do Claude Code
 - Antes de implementar qualquer código, leia a Spec e o Plan da feature em docs/specs/<feature>/.
 - Use o modo de planejamento (plan mode) em alterações com múltiplos arquivos.
-- Para gerar ou alterar documentação de especificações, siga o padrão spec-driven (Kiro).
+- Para gerar ou alterar documentação de especificações, siga o padrão spec-driven.
 - Mantenha respostas concisas em português (pt-BR).
 
 Retorne APENAS o Markdown do CLAUDE.md.`

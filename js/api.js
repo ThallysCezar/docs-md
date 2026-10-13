@@ -39,7 +39,7 @@ export async function callLLM({ providerId, modelId, apiKey, systemPrompt, userP
     // OpenRouter recomenda headers de identificação
     if (providerId === 'openrouter') {
         headers['HTTP-Referer'] = window.location.origin || 'https://github.com';
-        headers['X-Title'] = 'Doc Architect (Kiro Spec-Driven)';
+        headers['X-Title'] = 'Doc Architect (Spec-Driven)';
     }
 
     const payload = {

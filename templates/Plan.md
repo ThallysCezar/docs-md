@@ -1,6 +1,6 @@
 # Plan — {{NOME_DA_FEATURE}}
 
-> Junta o `design.md` e o `tasks.md` do Kiro. Gerado a partir de `Spec.md` **aprovada**.
+> Consolida o design técnico e o checklist de tarefas. Gerado a partir de `Spec.md` **aprovada**.
 > Status: `rascunho` | `aprovado` | `em execução` | `concluído`
 
 # Parte A — Design

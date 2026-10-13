@@ -1,6 +1,6 @@
 # AGENTS.md
 
-> Regras para **qualquer** agente de IA que trabalhe neste repositório (Claude Code, Codex, Cursor, Copilot, Kiro…).
+> Regras para **qualquer** agente de IA que trabalhe neste repositório (Claude Code, Codex, Cursor, Copilot e outros agentes).
 > Curto e objetivo. Detalhes do produto ficam em `docs/Context.md`.
 
 ## Projeto

@@ -80,6 +80,11 @@ const dom = {
     linkGetKey: document.getElementById('link-get-key'),
     btnToggleKeyVisibility: document.getElementById('btn-toggle-key-visibility'),
     providerCards: document.querySelectorAll('.provider-radio-card'),
+    btnOpenTutorial: document.getElementById('btn-open-tutorial'),
+    linkTutorialModal: document.getElementById('link-tutorial-modal'),
+    modalTutorial: document.getElementById('modal-tutorial'),
+    btnCloseTutorial: document.getElementById('btn-close-tutorial'),
+    btnTutorialUnderstood: document.getElementById('btn-tutorial-understood'),
     
     // Banner
     alertBanner: document.getElementById('alert-banner'),
@@ -293,6 +298,14 @@ function saveSettings() {
     updateProviderStatus();
     closeSettingsModal();
     showAlert(`Configurações salvas! Usando <strong>${state.provider.toUpperCase()}</strong> com o modelo <strong>${state.model}</strong>.`, 'success');
+}
+
+function openTutorialModal() {
+    if (dom.modalTutorial) dom.modalTutorial.classList.remove('hidden');
+}
+
+function closeTutorialModal() {
+    if (dom.modalTutorial) dom.modalTutorial.classList.add('hidden');
 }
 
 // ==========================================
@@ -555,7 +568,7 @@ async function handleApprovePlan() {
 
         switchStage(4);
         renderFinalPreview('agents');
-        showAlert('Todos os arquivos foram criados com sucesso segundo a metodologia Kiro! Você já pode baixar o pacote ZIP.', 'success');
+        showAlert('Todos os arquivos foram criados com sucesso no padrão spec-driven! Você já pode baixar o pacote ZIP.', 'success');
     } catch (err) {
         showAlert(`Falha ao gerar regras finais: ${err.message}`, 'error');
         switchStage(4);
@@ -610,6 +623,18 @@ function initEventListeners() {
     dom.btnOpenSettings.addEventListener('click', openSettingsModal);
     dom.btnCloseSettings.addEventListener('click', closeSettingsModal);
     dom.btnSaveSettings.addEventListener('click', saveSettings);
+
+    // Modal de Tutorial
+    if (dom.btnOpenTutorial) dom.btnOpenTutorial.addEventListener('click', openTutorialModal);
+    if (dom.linkTutorialModal) dom.linkTutorialModal.addEventListener('click', () => {
+        closeSettingsModal();
+        openTutorialModal();
+    });
+    if (dom.btnCloseTutorial) dom.btnCloseTutorial.addEventListener('click', closeTutorialModal);
+    if (dom.btnTutorialUnderstood) dom.btnTutorialUnderstood.addEventListener('click', () => {
+        closeTutorialModal();
+        openSettingsModal();
+    });
     
     // Toggle visibilidade da senha
     dom.btnToggleKeyVisibility.addEventListener('click', () => {

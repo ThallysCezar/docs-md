@@ -1,6 +1,6 @@
 # Spec — {{NOME_DA_FEATURE}}
 
-> Requisitos no padrão Kiro: histórias de usuário + critérios de aceite em **EARS**.
+> Requisitos no formato spec-driven: histórias de usuário + critérios de aceite em **EARS**.
 > Status: `rascunho` | `aprovado`
 
 ## Introdução
