@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc Architect — Spec-Driven Documentation (Kiro)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        primaryHover: '#4f46e5',
+                        surface: '#0f172a',
+                        surfaceLight: '#1e293b',
+                        surfaceBorder: '#334155'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- Top Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+                    DA
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-lg tracking-tight text-white">Doc Architect</span>
+                        <span class="text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 px-2 py-0.5 rounded-full font-medium">Spec-Driven (Kiro)</span>
+                    </div>
+                    <p class="text-xs text-slate-400 hidden sm:block">Gerador de especificações para agentes de IA com Groq & OpenRouter</p>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-settings" class="flex items-center space-x-2 text-xs sm:text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-1.5 rounded-lg border border-slate-700 transition">
+                    <span id="api-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
+                    <span id="api-status-text">Configurar IA</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col space-y-6">
+
+        <!-- Stepper Navigation -->
+        <nav aria-label="Progresso" class="bg-slate-900/70 border border-slate-800 p-4 rounded-xl shadow-sm">
+            <ol class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                <li id="step-tab-1" class="step-tab active flex items-center space-x-3 p-2.5 rounded-lg border border-indigo-500/50 bg-indigo-950/40 text-indigo-300 font-medium cursor-pointer transition">
+                    <span class="step-num w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                    <div class="truncate">
+                        <p class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">Fase 1</p>
+                        <p class="truncate font-semibold text-white">Context.md</p>
+                    </div>
+                </li>
+                <li id="step-tab-2" class="step-tab flex items-center space-x-3 p-2.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 font-medium cursor-pointer transition">
+                    <span class="step-num w-6 h-6 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                    <div class="truncate">
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Fase 2</p>
+                        <p class="truncate font-semibold text-slate-300">Spec.md (EARS)</p>
+                    </div>
+                </li>
+                <li id="step-tab-3" class="step-tab flex items-center space-x-3 p-2.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 font-medium cursor-pointer transition">
+                    <span class="step-num w-6 h-6 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                    <div class="truncate">
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Fase 3</p>
+                        <p class="truncate font-semibold text-slate-300">Plan.md (Design)</p>
+                    </div>
+                </li>
+                <li id="step-tab-4" class="step-tab flex items-center space-x-3 p-2.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 font-medium cursor-pointer transition">
+                    <span class="step-num w-6 h-6 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center text-xs font-bold shrink-0">4</span>
+                    <div class="truncate">
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Fase 4</p>
+                        <p class="truncate font-semibold text-slate-300">Regras & Exportação</p>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Status Message Banner -->
+        <div id="alert-banner" class="hidden p-4 rounded-xl border text-sm flex items-start space-x-3 transition">
+            <span id="alert-icon" class="text-lg shrink-0">ℹ️</span>
+            <div class="flex-1" id="alert-message"></div>
+            <button id="alert-close" class="text-slate-400 hover:text-white">&times;</button>
+        </div>
+
+        <!-- STAGE 1: CONTEXT.MD -->
+        <section id="stage-1" class="stage-section flex flex-col space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Input Card -->
+                <div class="lg:col-span-5 bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col space-y-4 shadow-sm">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                            <span>1. Steering do Produto</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Descreva seu projeto para gerar o Context.md permanente que guia todas as features.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome do Projeto</label>
+                        <input type="text" id="input-project-name" placeholder="ex.: MeuAppFinancas, E-commerce-V2..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">O que é o Produto e Problema que resolve?</label>
+                        <textarea id="input-project-desc" rows="5" placeholder="ex.: Um aplicativo de gestão de gastos pessoais focado em freelancers. Resolve a dificuldade de separar despesas PF e PJ, permitindo conciliação rápida e relatórios de fluxo de caixa." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tecnologias / Stack desejada (Opcional)</label>
+                        <textarea id="input-tech-stack" rows="3" placeholder="ex.: Next.js 14, Tailwind CSS, PostgreSQL com Prisma, Jest/Testing Library, deploy na Vercel." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"></textarea>
+                        <p class="text-xs text-slate-500 mt-1">O que não for informado será marcado como <code class="text-amber-400">TBD</code> pela IA.</p>
+                    </div>
+
+                    <button id="btn-generate-context" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center space-x-2 transition shadow-lg shadow-indigo-600/20">
+                        <span class="btn-spinner hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span class="btn-text">Gerar Context.md com IA</span>
+                    </button>
+                </div>
+
+                <!-- Right Document Viewer / Editor -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl flex flex-col overflow-hidden shadow-sm">
+                    <div class="bg-slate-950/60 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-mono text-xs font-bold text-slate-300">docs/Context.md</span>
+                            <span id="context-badge" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Aguardando geração</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="bg-slate-800 p-0.5 rounded-lg flex text-xs">
+                                <button id="tab-context-preview" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white font-medium">Visualizar</button>
+                                <button id="tab-context-edit" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white font-medium">Editar (Raw)</button>
+                            </div>
+                            <button id="btn-copy-context" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md transition flex items-center">
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 min-h-[420px] max-h-[600px] overflow-y-auto">
+                        <div id="context-preview-container" class="markdown-body">
+                            <p class="text-slate-500 italic">O documento Context.md gerado pela IA aparecerá aqui para você ler e revisar antes de aprovar.</p>
+                        </div>
+                        <textarea id="context-raw-editor" class="hidden w-full h-full min-h-[400px] bg-slate-950 font-mono text-xs text-slate-200 p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+
+                    <!-- Approval Gate Bar -->
+                    <div class="bg-slate-950/80 border-t border-slate-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div class="text-xs text-slate-400">
+                            Fase 1 do Kiro: <span class="text-slate-200">Aprove o contexto antes de avançar para a Spec.</span>
+                        </div>
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <button id="btn-approve-context" disabled class="w-full sm:w-auto bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 hover:bg-emerald-500 text-white font-semibold py-2 px-5 rounded-lg text-sm flex items-center justify-center space-x-2 transition shadow-lg shadow-emerald-600/20">
+                                <span>Aprovar Contexto & Avançar</span>
+                                <span>&rarr;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 2: SPEC.MD -->
+        <section id="stage-2" class="stage-section hidden flex flex-col space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Input Card -->
+                <div class="lg:col-span-5 bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col space-y-4 shadow-sm">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                            <span>2. Especificação da Feature (EARS)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Transforme a ideia da feature em histórias de usuário e critérios formais no padrão EARS.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome da Feature (Kebab-Case)</label>
+                        <input type="text" id="input-feature-name" placeholder="ex.: autenticacao-jwt, exportacao-csv, dashboard-financeiro..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">O que a Feature deve fazer? (Requisitos)</label>
+                        <textarea id="input-feature-desc" rows="6" placeholder="ex.: O usuário pode criar conta com email e senha ou fazer login social com Google. O sistema deve emitir JWT com validade de 24h e refresh token de 7 dias. Deve ter bloqueio de 5 tentativas inválidas e recuperação de senha via email." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+
+                    <div class="bg-indigo-950/30 border border-indigo-800/40 p-3 rounded-lg text-xs text-indigo-300 space-y-1">
+                        <p class="font-bold text-indigo-200">Sintaxe EARS aplicada automaticamente:</p>
+                        <p>• <code>WHEN &lt;gatilho&gt; THE sistema SHALL &lt;resposta&gt;</code></p>
+                        <p>• <code>IF &lt;condição&gt; THEN THE sistema SHALL &lt;resposta&gt;</code></p>
+                    </div>
+
+                    <button id="btn-generate-spec" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center space-x-2 transition shadow-lg shadow-indigo-600/20">
+                        <span class="btn-spinner hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span class="btn-text">Gerar Spec.md (EARS) com IA</span>
+                    </button>
+                </div>
+
+                <!-- Right Document Viewer / Editor -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl flex flex-col overflow-hidden shadow-sm">
+                    <div class="bg-slate-950/60 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span id="spec-file-label" class="font-mono text-xs font-bold text-slate-300">docs/specs/feature/Spec.md</span>
+                            <span id="spec-badge" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Aguardando geração</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="bg-slate-800 p-0.5 rounded-lg flex text-xs">
+                                <button id="tab-spec-preview" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white font-medium">Visualizar</button>
+                                <button id="tab-spec-edit" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white font-medium">Editar (Raw)</button>
+                            </div>
+                            <button id="btn-copy-spec" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md transition flex items-center">
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 min-h-[420px] max-h-[600px] overflow-y-auto">
+                        <div id="spec-preview-container" class="markdown-body">
+                            <p class="text-slate-500 italic">A especificação Spec.md gerada aparecerá aqui com histórias de usuário e critérios formais EARS numerados.</p>
+                        </div>
+                        <textarea id="spec-raw-editor" class="hidden w-full h-full min-h-[400px] bg-slate-950 font-mono text-xs text-slate-200 p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+
+                    <!-- Approval Gate Bar -->
+                    <div class="bg-slate-950/80 border-t border-slate-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <button id="btn-back-to-context" class="text-xs text-slate-400 hover:text-white">&larr; Voltar ao Contexto</button>
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <button id="btn-approve-spec" disabled class="w-full sm:w-auto bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 hover:bg-emerald-500 text-white font-semibold py-2 px-5 rounded-lg text-sm flex items-center justify-center space-x-2 transition shadow-lg shadow-emerald-600/20">
+                                <span>Aprovar Spec & Avançar para Plan</span>
+                                <span>&rarr;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 3: PLAN.MD -->
+        <section id="stage-3" class="stage-section hidden flex flex-col space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Details Card -->
+                <div class="lg:col-span-4 bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col space-y-4 shadow-sm">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                            <span>3. Plano Técnico & Tarefas</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Design de arquitetura (Mermaid) + lista de tarefas atômicas rastreáveis para commits individuais.</p>
+                    </div>
+
+                    <div class="bg-slate-950/60 border border-slate-800 p-3.5 rounded-lg space-y-2 text-xs">
+                        <p class="text-slate-400">Contexto Aprovado: <span id="summary-project-name" class="font-bold text-slate-200"></span></p>
+                        <p class="text-slate-400">Feature Aprovada: <span id="summary-feature-name" class="font-bold text-indigo-400"></span></p>
+                    </div>
+
+                    <div class="text-xs text-slate-400 space-y-2">
+                        <p class="font-semibold text-slate-300">O que será incluído no Plan.md:</p>
+                        <p>✓ <strong>Parte A (Design):</strong> Arquitetura Mermaid, modelo de dados, contratos de API e estratégia de testes.</p>
+                        <p>✓ <strong>Parte B (Tarefas):</strong> Checkboxes numerados com vinculação explícita: <code>_Requisitos: Rx.y_</code>.</p>
+                    </div>
+
+                    <button id="btn-generate-plan" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center space-x-2 transition shadow-lg shadow-indigo-600/20">
+                        <span class="btn-spinner hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span class="btn-text">Gerar Plan.md com IA</span>
+                    </button>
+                </div>
+
+                <!-- Right Document Viewer / Editor -->
+                <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-xl flex flex-col overflow-hidden shadow-sm">
+                    <div class="bg-slate-950/60 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span id="plan-file-label" class="font-mono text-xs font-bold text-slate-300">docs/specs/feature/Plan.md</span>
+                            <span id="plan-badge" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Aguardando geração</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="bg-slate-800 p-0.5 rounded-lg flex text-xs">
+                                <button id="tab-plan-preview" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white font-medium">Visualizar</button>
+                                <button id="tab-plan-edit" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white font-medium">Editar (Raw)</button>
+                            </div>
+                            <button id="btn-copy-plan" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md transition flex items-center">
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 min-h-[460px] max-h-[640px] overflow-y-auto">
+                        <div id="plan-preview-container" class="markdown-body">
+                            <p class="text-slate-500 italic">O plano técnico aparecerá aqui com os diagramas Mermaid renderizados visualmente e checklist de tarefas.</p>
+                        </div>
+                        <textarea id="plan-raw-editor" class="hidden w-full h-full min-h-[440px] bg-slate-950 font-mono text-xs text-slate-200 p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+
+                    <!-- Approval Gate Bar -->
+                    <div class="bg-slate-950/80 border-t border-slate-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <button id="btn-back-to-spec" class="text-xs text-slate-400 hover:text-white">&larr; Voltar à Spec</button>
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <button id="btn-approve-plan" disabled class="w-full sm:w-auto bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 hover:bg-emerald-500 text-white font-semibold py-2 px-5 rounded-lg text-sm flex items-center justify-center space-x-2 transition shadow-lg shadow-emerald-600/20">
+                                <span>Aprovar Plan & Gerar Regras</span>
+                                <span>&rarr;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 4: RULES & EXPORT -->
+        <section id="stage-4" class="stage-section hidden flex flex-col space-y-6">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <span>Documentação Completa Pronta!</span>
+                        <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800/60 px-2.5 py-0.5 rounded-full font-semibold">100% Kiro Compliant</span>
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">Todos os documentos foram gerados, revisados e validados segundo o fluxo spec-driven.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="btn-download-zip" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-5 rounded-lg flex items-center space-x-2 shadow-lg shadow-indigo-600/30 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>Baixar Pacote .ZIP (Estrutura Kiro)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs of all generated files -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                <div class="bg-slate-950/80 border-b border-slate-800 px-4 py-2 flex items-center justify-between overflow-x-auto">
+                    <div class="flex space-x-1" id="final-files-tabs">
+                        <button data-file="agents" class="final-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white">AGENTS.md</button>
+                        <button data-file="claude" class="final-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">CLAUDE.md</button>
+                        <button data-file="context" class="final-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">docs/Context.md</button>
+                        <button data-file="spec" class="final-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">Spec.md</button>
+                        <button data-file="plan" class="final-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">Plan.md</button>
+                    </div>
+                    <button id="btn-copy-active-final" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg transition ml-4 shrink-0 flex items-center">
+                        Copiar Este Arquivo
+                    </button>
+                </div>
+
+                <div class="p-6 min-h-[460px] max-h-[640px] overflow-y-auto">
+                    <div id="final-preview-container" class="markdown-body"></div>
+                </div>
+            </div>
+
+            <!-- Folder Structure Guide Card -->
+            <div class="bg-slate-900/60 border border-slate-800 p-5 rounded-xl">
+                <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2">Estrutura gerada para o seu repositório:</h3>
+                <pre class="bg-slate-950 p-4 rounded-lg text-xs font-mono text-indigo-300 border border-slate-800 leading-relaxed overflow-x-auto"><span class="text-slate-500">meu-projeto/</span>
+├── <span class="text-emerald-400">AGENTS.md</span>                     <span class="text-slate-500">← Regras universais para qualquer agente</span>
+├── <span class="text-emerald-400">CLAUDE.md</span>                     <span class="text-slate-500">← Configuração concisa do Claude Code</span>
+└── <span class="text-slate-400">docs/</span>
+    ├── <span class="text-indigo-400">Context.md</span>                <span class="text-slate-500">← Steering global do produto e stack</span>
+    └── <span class="text-slate-400">specs/</span>
+        └── <span class="text-amber-400">&lt;sua-feature&gt;/</span>
+            ├── <span class="text-indigo-400">Spec.md</span>           <span class="text-slate-500">← Histórias e critérios de aceite em EARS</span>
+            └── <span class="text-indigo-400">Plan.md</span>           <span class="text-slate-500">← Design (Mermaid) + Tarefas com _Requisitos: Rx.y_</span></pre>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SETTINGS MODAL -->
+    <div id="modal-settings" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl p-6 shadow-2xl flex flex-col space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <span>Configuração de IA (Gratuito)</span>
+                </h3>
+                <button id="btn-close-settings" class="text-slate-400 hover:text-white text-xl">&times;</button>
+            </div>
+
+            <!-- Provider Selection -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Provedor de IA</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="provider-radio-card flex flex-col p-3 rounded-xl border border-indigo-500 bg-indigo-950/40 cursor-pointer transition">
+                        <input type="radio" name="provider-choice" value="groq" checked class="hidden">
+                        <span class="font-bold text-sm text-white">Groq</span>
+                        <span class="text-xs text-indigo-300 mt-0.5">Llama 3.3 70B (Ultrarrápido)</span>
+                        <span class="text-[10px] text-emerald-400 mt-1 font-semibold">Tier 100% Gratuito</span>
+                    </label>
+                    <label class="provider-radio-card flex flex-col p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer transition">
+                        <input type="radio" name="provider-choice" value="openrouter" class="hidden">
+                        <span class="font-bold text-sm text-white">OpenRouter</span>
+                        <span class="text-xs text-slate-400 mt-0.5">Modelos :free</span>
+                        <span class="text-[10px] text-indigo-400 mt-1 font-semibold">Llama, DeepSeek, etc.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Model Selection -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Modelo de IA</label>
+                <select id="select-model" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"></select>
+                <p id="model-description" class="text-xs text-slate-400 mt-1"></p>
+            </div>
+
+            <!-- API Key Input -->
+            <div>
+                <div class="flex items-center justify-between mb-1">
+                    <label class="text-xs font-semibold text-slate-300 uppercase" id="label-api-key">Chave de API do Groq</label>
+                    <a id="link-get-key" href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" class="text-xs text-indigo-400 hover:underline">
+                        Obter chave gratuita &nearr;
+                    </a>
+                </div>
+                <div class="relative">
+                    <input type="password" id="input-api-key" placeholder="gsk_..." class="w-full bg-slate-950 border border-slate-700 rounded-lg pl-3 pr-10 py-2.5 text-sm font-mono text-slate-100 focus:outline-none focus:border-indigo-500">
+                    <button type="button" id="btn-toggle-key-visibility" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200 text-xs">
+                        👁️
+                    </button>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1.5 flex items-center space-x-1">
+                    <span>🔒</span>
+                    <span>Sua chave é armazenada <strong>apenas no localStorage</strong> deste navegador. Nunca é enviada a nenhum servidor além da própria API.</span>
+                </p>
+            </div>
+
+            <div class="border-t border-slate-800 pt-3 flex justify-end space-x-3">
+                <button id="btn-save-settings" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-5 rounded-lg text-sm transition">
+                    Salvar e Continuar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Controller Script -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
